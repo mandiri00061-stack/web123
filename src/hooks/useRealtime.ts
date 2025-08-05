@@ -26,7 +26,9 @@ export function useRealtimeSubscription<T>(
         const { data: initialData, error: fetchError } = await query.order('created_at', { ascending: false })
         
         if (fetchError) {
+          console.error('Fetch error:', fetchError)
           setError(fetchError.message)
+          setLoading(false)
           return
         }
 
@@ -64,9 +66,13 @@ export function useRealtimeSubscription<T>(
           )
           .subscribe((status) => {
             console.log('Subscription status:', status)
+            if (status === 'SUBSCRIBED') {
+              console.log(`Successfully subscribed to ${table}`)
+            }
           })
 
       } catch (err) {
+        console.error('Setup subscription error:', err)
         setError(err instanceof Error ? err.message : 'Unknown error')
         setLoading(false)
       }

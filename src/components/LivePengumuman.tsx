@@ -1,5 +1,5 @@
 import React from 'react'
-import { AlertCircle, X } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import { useRealtimePengumuman } from '../hooks/useRealtime'
 import type { Pengumuman } from '../lib/supabase'
 

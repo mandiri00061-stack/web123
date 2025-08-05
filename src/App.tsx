@@ -3,6 +3,7 @@ import { Home, Users, Newspaper, DollarSign, ImageIcon, Phone, Menu, X } from 'l
 import Header from './components/Header';
 import RealtimeStatus from './components/RealtimeStatus';
 import LiveChat from './components/LiveChat';
+import LivePengumuman from './components/LivePengumuman';
 import NotificationPanel from './components/NotificationPanel';
 import Beranda from './pages/Beranda';
 import Struktur from './pages/Struktur';
@@ -60,6 +61,7 @@ function App() {
       
       {/* Realtime Components */}
       <RealtimeStatus />
+      <LivePengumuman />
       <NotificationPanel />
       <LiveChat />
     </div>

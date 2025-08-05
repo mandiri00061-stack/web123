@@ -41,15 +41,21 @@ const Iuran: React.FC = () => {
         iuran.warga_id === warga.id && iuran.jenis === jenis
       );
       
-      const months = ['jan', 'feb', 'mar', 'apr'];
+      const currentYear = new Date().getFullYear();
+      const months = [
+        { key: 'jan', month: 0, name: 'Januari' },
+        { key: 'feb', month: 1, name: 'Februari' },
+        { key: 'mar', month: 2, name: 'Maret' },
+        { key: 'apr', month: 3, name: 'April' }
+      ];
       const monthlyStatus: any = {};
       let total = 0;
       
-      months.forEach((month, index) => {
+      months.forEach((monthData) => {
         const monthIuran = wargaIuran.find((iuran: Iuran) => 
-          new Date(iuran.created_at).getMonth() === index
+          iuran.tahun === currentYear && iuran.bulan.toLowerCase() === monthData.name.toLowerCase()
         );
-        monthlyStatus[month] = monthIuran?.status || 'belum';
+        monthlyStatus[monthData.key] = monthIuran?.status || 'belum';
         if (monthIuran?.status === 'lunas') {
           total += monthIuran.jumlah;
         }

@@ -43,7 +43,7 @@ const Berita: React.FC = () => {
               </span>
               <div className="flex items-center space-x-2 text-gray-500">
                 <Calendar className="w-4 h-4" />
-                <span>{new Date(selectedNews.date).toLocaleDateString('id-ID', {
+                <span>{new Date(selectedNews.published_at).toLocaleDateString('id-ID', {
                   weekday: 'long',
                   year: 'numeric',
                   month: 'long',
@@ -58,6 +58,12 @@ const Berita: React.FC = () => {
             <div className="whitespace-pre-line text-gray-700 leading-relaxed">
               {selectedNews.content}
             </div>
+          </div>
+          
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <p className="text-sm text-gray-500">
+              Ditulis oleh: <span className="font-medium">{selectedNews.author}</span>
+            </p>
           </div>
         </article>
       </div>
