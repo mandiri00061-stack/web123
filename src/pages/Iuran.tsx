@@ -19,7 +19,7 @@ const Iuran: React.FC = () => {
         .from('iuran')
         .update({ 
           status,
-          tanggal_bayar: status === 'lunas' ? new Date().toISOString() : null,
+          tanggal_bayar: status === 'lunas' ? new Date().toISOString().split('T')[0] : null,
           updated_at: new Date().toISOString()
         })
         .eq('id', iuranId);
@@ -34,7 +34,7 @@ const Iuran: React.FC = () => {
 
   // Process realtime data for display
   const processIuranData = (jenis: 'bulanan' | 'sampah') => {
-    if (!wargaData.length || !iuranData.length) return [];
+    if (!wargaData.length) return [];
     
     return wargaData.map((warga: Warga) => {
       const wargaIuran = iuranData.filter((iuran: Iuran) => 
@@ -43,17 +43,19 @@ const Iuran: React.FC = () => {
       
       const currentYear = new Date().getFullYear();
       const months = [
-        { key: 'jan', month: 0, name: 'Januari' },
-        { key: 'feb', month: 1, name: 'Februari' },
-        { key: 'mar', month: 2, name: 'Maret' },
-        { key: 'apr', month: 3, name: 'April' }
+        { key: 'jan', name: 'Januari' },
+        { key: 'feb', name: 'Februari' },
+        { key: 'mar', name: 'Maret' },
+        { key: 'apr', name: 'April' }
       ];
+      
       const monthlyStatus: any = {};
       let total = 0;
       
       months.forEach((monthData) => {
         const monthIuran = wargaIuran.find((iuran: Iuran) => 
-          iuran.tahun === currentYear && iuran.bulan.toLowerCase() === monthData.name.toLowerCase()
+          iuran.tahun === currentYear && 
+          iuran.bulan.toLowerCase() === monthData.name.toLowerCase()
         );
         monthlyStatus[monthData.key] = monthIuran?.status || 'belum';
         if (monthIuran?.status === 'lunas') {
@@ -114,7 +116,8 @@ const Iuran: React.FC = () => {
     return status === 'lunas' ? 'Lunas' : 'Belum Bayar';
   };
 
-  const filteredData = (activeTab === 'bulanan' ? iuranBulanan : iuranSampah).filter(item =>
+  const currentData = activeTab === 'bulanan' ? iuranBulanan : iuranSampah;
+  const filteredData = currentData.filter(item =>
     item.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.alamat.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -257,93 +260,101 @@ const Iuran: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {filteredData.map((item, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">{item.nama}</div>
-                          <div className="text-sm text-gray-500">{item.alamat}</div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex items-center justify-center space-x-2">
-                          {getStatusIcon(item.jan)}
-                          <button
-                            onClick={() => {
-                              const iuran = item.iuranData?.find((i: Iuran) => 
-                                i.bulan.toLowerCase() === 'januari'
-                              );
-                              if (iuran) {
-                                updatePaymentStatus(iuran.id, item.jan === 'lunas' ? 'belum' : 'lunas');
-                              }
-                            }}
-                            className={`text-xs hover:underline ${item.jan === 'lunas' ? 'text-green-600' : 'text-red-600'}`}
-                          >
-                            {getStatusText(item.jan)}
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex items-center justify-center space-x-2">
-                          {getStatusIcon(item.feb)}
-                          <button
-                            onClick={() => {
-                              const iuran = item.iuranData?.find((i: Iuran) => 
-                                i.bulan.toLowerCase() === 'februari'
-                              );
-                              if (iuran) {
-                                updatePaymentStatus(iuran.id, item.feb === 'lunas' ? 'belum' : 'lunas');
-                              }
-                            }}
-                            className={`text-xs hover:underline ${item.feb === 'lunas' ? 'text-green-600' : 'text-red-600'}`}
-                          >
-                            {getStatusText(item.feb)}
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex items-center justify-center space-x-2">
-                          {getStatusIcon(item.mar)}
-                          <button
-                            onClick={() => {
-                              const iuran = item.iuranData?.find((i: Iuran) => 
-                                i.bulan.toLowerCase() === 'maret'
-                              );
-                              if (iuran) {
-                                updatePaymentStatus(iuran.id, item.mar === 'lunas' ? 'belum' : 'lunas');
-                              }
-                            }}
-                            className={`text-xs hover:underline ${item.mar === 'lunas' ? 'text-green-600' : 'text-red-600'}`}
-                          >
-                            {getStatusText(item.mar)}
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex items-center justify-center space-x-2">
-                          {getStatusIcon(item.apr)}
-                          <button
-                            onClick={() => {
-                              const iuran = item.iuranData?.find((i: Iuran) => 
-                                i.bulan.toLowerCase() === 'april'
-                              );
-                              if (iuran) {
-                                updatePaymentStatus(iuran.id, item.apr === 'lunas' ? 'belum' : 'lunas');
-                              }
-                            }}
-                            className={`text-xs hover:underline ${item.apr === 'lunas' ? 'text-green-600' : 'text-red-600'}`}
-                          >
-                            {getStatusText(item.apr)}
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <span className="text-sm font-medium text-gray-900">
-                          Rp {item.total.toLocaleString('id-ID')}
-                        </span>
+                  {filteredData.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                        {searchTerm ? 'Tidak ada data yang sesuai dengan pencarian' : 'Belum ada data iuran'}
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    filteredData.map((item, index) => (
+                      <tr key={index} className="hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">{item.nama}</div>
+                            <div className="text-sm text-gray-500">{item.alamat}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex items-center justify-center space-x-2">
+                            {getStatusIcon(item.jan)}
+                            <button
+                              onClick={() => {
+                                const iuran = item.iuranData?.find((i: Iuran) => 
+                                  i.bulan.toLowerCase() === 'januari'
+                                );
+                                if (iuran) {
+                                  updatePaymentStatus(iuran.id, item.jan === 'lunas' ? 'belum' : 'lunas');
+                                }
+                              }}
+                              className={`text-xs hover:underline ${item.jan === 'lunas' ? 'text-green-600' : 'text-red-600'}`}
+                            >
+                              {getStatusText(item.jan)}
+                            </button>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex items-center justify-center space-x-2">
+                            {getStatusIcon(item.feb)}
+                            <button
+                              onClick={() => {
+                                const iuran = item.iuranData?.find((i: Iuran) => 
+                                  i.bulan.toLowerCase() === 'februari'
+                                );
+                                if (iuran) {
+                                  updatePaymentStatus(iuran.id, item.feb === 'lunas' ? 'belum' : 'lunas');
+                                }
+                              }}
+                              className={`text-xs hover:underline ${item.feb === 'lunas' ? 'text-green-600' : 'text-red-600'}`}
+                            >
+                              {getStatusText(item.feb)}
+                            </button>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex items-center justify-center space-x-2">
+                            {getStatusIcon(item.mar)}
+                            <button
+                              onClick={() => {
+                                const iuran = item.iuranData?.find((i: Iuran) => 
+                                  i.bulan.toLowerCase() === 'maret'
+                                );
+                                if (iuran) {
+                                  updatePaymentStatus(iuran.id, item.mar === 'lunas' ? 'belum' : 'lunas');
+                                }
+                              }}
+                              className={`text-xs hover:underline ${item.mar === 'lunas' ? 'text-green-600' : 'text-red-600'}`}
+                            >
+                              {getStatusText(item.mar)}
+                            </button>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex items-center justify-center space-x-2">
+                            {getStatusIcon(item.apr)}
+                            <button
+                              onClick={() => {
+                                const iuran = item.iuranData?.find((i: Iuran) => 
+                                  i.bulan.toLowerCase() === 'april'
+                                );
+                                if (iuran) {
+                                  updatePaymentStatus(iuran.id, item.apr === 'lunas' ? 'belum' : 'lunas');
+                                }
+                              }}
+                              className={`text-xs hover:underline ${item.apr === 'lunas' ? 'text-green-600' : 'text-red-600'}`}
+                            >
+                              {getStatusText(item.apr)}
+                            </button>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <span className="text-sm font-medium text-gray-900">
+                            Rp {item.total.toLocaleString('id-ID')}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

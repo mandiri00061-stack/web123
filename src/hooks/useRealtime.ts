@@ -37,7 +37,7 @@ export function useRealtimeSubscription<T>(
 
         // Setup realtime subscription
         channel = supabase
-          .channel(`realtime-${table}`)
+          .channel(`realtime-${table}-${Date.now()}`)
           .on(
             'postgres_changes',
             {
@@ -112,24 +112,4 @@ export function useRealtimeChat() {
 
 export function useRealtimePengumuman() {
   return useRealtimeSubscription('pengumuman', [])
-}
-
-export function useRealtimeIuranSummary(tahun?: number) {
-  return useRealtimeSubscription(
-    'iuran_summary',
-    [],
-    tahun ? { column: 'tahun', value: tahun } : undefined
-  )
-}
-
-export function useRealtimeIuranSettings() {
-  return useRealtimeSubscription('iuran_settings', [])
-}
-
-export function useRealtimePaymentHistory(wargaId?: number) {
-  return useRealtimeSubscription(
-    'payment_history',
-    [],
-    wargaId ? { column: 'warga_id', value: wargaId } : undefined
-  )
 }

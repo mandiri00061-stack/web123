@@ -113,6 +113,19 @@ export const iuranUtils = {
   // Generate monthly iuran for all active warga
   async generateMonthlyIuran(bulan: string, tahun: number) {
     try {
+      // Check if iuran already exists for this month and year
+      const { data: existingIuran, error: checkError } = await supabase
+        .from('iuran')
+        .select('id')
+        .eq('bulan', bulan)
+        .eq('tahun', tahun)
+        .limit(1);
+
+      if (checkError) return { data: null, error: checkError };
+      if (existingIuran && existingIuran.length > 0) {
+        return { data: null, error: new Error('Iuran untuk bulan ini sudah ada') };
+      }
+
       // Get all active warga
       const { data: wargaData, error: wargaError } = await supabase
         .from('warga')

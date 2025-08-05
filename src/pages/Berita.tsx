@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Calendar, Tag, ArrowLeft } from 'lucide-react';
+import { Calendar, ArrowLeft } from 'lucide-react';
 import { useRealtimeBerita } from '../hooks/useRealtime';
 import type { Berita } from '../lib/supabase';
 
 const Berita: React.FC = () => {
-  const [selectedNews, setSelectedNews] = useState<any>(null);
+  const [selectedNews, setSelectedNews] = useState<Berita | null>(null);
+  const [filterType, setFilterType] = useState<'all' | 'berita' | 'pengumuman'>('all');
   
   // Use realtime data
   const { data: beritaList, loading } = useRealtimeBerita();
@@ -19,6 +20,12 @@ const Berita: React.FC = () => {
       </div>
     );
   }
+
+  // Filter berita based on type
+  const filteredBerita = beritaList.filter((berita: Berita) => {
+    if (filterType === 'all') return true;
+    return berita.type === filterType;
+  });
 
   if (selectedNews) {
     return (
@@ -84,13 +91,34 @@ const Berita: React.FC = () => {
       {/* Filter Tabs */}
       <div className="flex justify-center mb-8">
         <div className="bg-white rounded-lg p-1 shadow-md">
-          <button className="px-6 py-2 rounded-md bg-emerald-600 text-white font-semibold">
+          <button 
+            onClick={() => setFilterType('all')}
+            className={`px-6 py-2 rounded-md font-semibold transition-colors ${
+              filterType === 'all' 
+                ? 'bg-emerald-600 text-white' 
+                : 'text-gray-600 hover:text-emerald-600'
+            }`}
+          >
             Semua
           </button>
-          <button className="px-6 py-2 rounded-md text-gray-600 hover:text-emerald-600 font-semibold">
+          <button 
+            onClick={() => setFilterType('berita')}
+            className={`px-6 py-2 rounded-md font-semibold transition-colors ${
+              filterType === 'berita' 
+                ? 'bg-emerald-600 text-white' 
+                : 'text-gray-600 hover:text-emerald-600'
+            }`}
+          >
             Berita
           </button>
-          <button className="px-6 py-2 rounded-md text-gray-600 hover:text-emerald-600 font-semibold">
+          <button 
+            onClick={() => setFilterType('pengumuman')}
+            className={`px-6 py-2 rounded-md font-semibold transition-colors ${
+              filterType === 'pengumuman' 
+                ? 'bg-emerald-600 text-white' 
+                : 'text-gray-600 hover:text-emerald-600'
+            }`}
+          >
             Pengumuman
           </button>
         </div>
@@ -98,52 +126,52 @@ const Berita: React.FC = () => {
 
       {/* News List */}
       <div className="space-y-6">
-        {beritaList.map((berita: Berita) => (
-          <article 
-            key={berita.id}
-            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
-            onClick={() => setSelectedNews(berita)}
-          >
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-              <div className="flex items-center space-x-4 mb-3 md:mb-0">
-                <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                  berita.type === 'berita' 
-                    ? 'bg-blue-100 text-blue-600' 
-                    : 'bg-orange-100 text-orange-600'
-                }`}>
-                  {berita.type === 'berita' ? 'Berita' : 'Pengumuman'}
-                </span>
-                <div className="flex items-center space-x-2 text-gray-500">
-                  <Calendar className="w-4 h-4" />
-                  <span className="text-sm">
-                    {new Date(berita.published_at).toLocaleDateString('id-ID')}
+        {filteredBerita.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">📰</div>
+            <p className="text-gray-500">Belum ada berita atau pengumuman</p>
+          </div>
+        ) : (
+          filteredBerita.map((berita: Berita) => (
+            <article 
+              key={berita.id}
+              className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+              onClick={() => setSelectedNews(berita)}
+            >
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
+                <div className="flex items-center space-x-4 mb-3 md:mb-0">
+                  <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                    berita.type === 'berita' 
+                      ? 'bg-blue-100 text-blue-600' 
+                      : 'bg-orange-100 text-orange-600'
+                  }`}>
+                    {berita.type === 'berita' ? 'Berita' : 'Pengumuman'}
                   </span>
+                  <div className="flex items-center space-x-2 text-gray-500">
+                    <Calendar className="w-4 h-4" />
+                    <span className="text-sm">
+                      {new Date(berita.published_at).toLocaleDateString('id-ID')}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <h2 className="text-xl font-bold text-gray-900 mb-3 hover:text-emerald-600 transition-colors">
-              {berita.title}
-            </h2>
-            
-            <p className="text-gray-600 leading-relaxed mb-4">
-              {berita.summary}
-            </p>
+              <h2 className="text-xl font-bold text-gray-900 mb-3 hover:text-emerald-600 transition-colors">
+                {berita.title}
+              </h2>
+              
+              <p className="text-gray-600 leading-relaxed mb-4">
+                {berita.summary}
+              </p>
 
-            <div className="flex items-center justify-between">
-              <span className="text-emerald-600 font-semibold hover:text-emerald-700">
-                Baca Selengkapnya →
-              </span>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      {/* Load More Button */}
-      <div className="text-center mt-12">
-        <button className="bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors">
-          Muat Lebih Banyak
-        </button>
+              <div className="flex items-center justify-between">
+                <span className="text-emerald-600 font-semibold hover:text-emerald-700">
+                  Baca Selengkapnya →
+                </span>
+              </div>
+            </article>
+          ))
+        )}
       </div>
     </div>
   );

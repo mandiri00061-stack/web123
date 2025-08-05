@@ -119,7 +119,7 @@ const LiveChat: React.FC = () => {
                   <div className="text-center text-gray-500">Memuat pesan...</div>
                 ) : messages.length === 0 ? (
                   <div className="text-center text-gray-500">
-                    <div className="mb-2">💬</div>
+                    <div className="text-4xl mb-2">💬</div>
                     <p>Belum ada pesan</p>
                     <p className="text-xs mt-1">Mulai percakapan dengan warga lain</p>
                   </div>
