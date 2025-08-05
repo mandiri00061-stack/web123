@@ -112,11 +112,44 @@ export interface PaymentHistory {
 export const iuranUtils = {
   // Generate monthly iuran for all active warga
   async generateMonthlyIuran(bulan: string, tahun: number) {
-    const { data, error } = await supabase.rpc('generate_monthly_iuran', {
-      p_bulan: bulan,
-      p_tahun: tahun
-    });
-    return { data, error };
+    try {
+      // Get all active warga
+      const { data: wargaData, error: wargaError } = await supabase
+        .from('warga')
+        .select('*')
+        .eq('status', 'aktif');
+
+      if (wargaError) return { data: null, error: wargaError };
+
+      // Create iuran records for each warga
+      const iuranRecords = wargaData.flatMap(warga => [
+        {
+          warga_id: warga.id,
+          bulan,
+          tahun,
+          jenis: 'bulanan' as const,
+          jumlah: 150000,
+          status: 'belum' as const
+        },
+        {
+          warga_id: warga.id,
+          bulan,
+          tahun,
+          jenis: 'sampah' as const,
+          jumlah: 25000,
+          status: 'belum' as const
+        }
+      ]);
+
+      const { data, error } = await supabase
+        .from('iuran')
+        .insert(iuranRecords)
+        .select();
+
+      return { data, error };
+    } catch (err) {
+      return { data: null, error: err as Error };
+    }
   },
 
   // Update payment status

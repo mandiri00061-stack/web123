@@ -271,7 +271,7 @@ const Iuran: React.FC = () => {
                           <button
                             onClick={() => {
                               const iuran = item.iuranData?.find((i: Iuran) => 
-                                new Date(i.created_at).getMonth() === 0
+                                i.bulan.toLowerCase() === 'januari'
                               );
                               if (iuran) {
                                 updatePaymentStatus(iuran.id, item.jan === 'lunas' ? 'belum' : 'lunas');
@@ -289,7 +289,7 @@ const Iuran: React.FC = () => {
                           <button
                             onClick={() => {
                               const iuran = item.iuranData?.find((i: Iuran) => 
-                                new Date(i.created_at).getMonth() === 1
+                                i.bulan.toLowerCase() === 'februari'
                               );
                               if (iuran) {
                                 updatePaymentStatus(iuran.id, item.feb === 'lunas' ? 'belum' : 'lunas');
@@ -307,7 +307,7 @@ const Iuran: React.FC = () => {
                           <button
                             onClick={() => {
                               const iuran = item.iuranData?.find((i: Iuran) => 
-                                new Date(i.created_at).getMonth() === 2
+                                i.bulan.toLowerCase() === 'maret'
                               );
                               if (iuran) {
                                 updatePaymentStatus(iuran.id, item.mar === 'lunas' ? 'belum' : 'lunas');
@@ -325,7 +325,7 @@ const Iuran: React.FC = () => {
                           <button
                             onClick={() => {
                               const iuran = item.iuranData?.find((i: Iuran) => 
-                                new Date(i.created_at).getMonth() === 3
+                                i.bulan.toLowerCase() === 'april'
                               );
                               if (iuran) {
                                 updatePaymentStatus(iuran.id, item.apr === 'lunas' ? 'belum' : 'lunas');

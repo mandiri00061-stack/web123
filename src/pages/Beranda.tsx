@@ -10,23 +10,29 @@ const Beranda: React.FC<BerandaProps> = ({ onNavigate }) => {
     {
       id: 1,
       title: 'Pembayaran Iuran Bulan Januari 2025',
-      date: '2025-01-15',
+      published_at: '2025-01-15',
       summary: 'Reminder untuk warga yang belum melakukan pembayaran iuran bulanan Januari 2025. Batas waktu pembayaran hingga tanggal 20 Januari.',
-      type: 'pengumuman'
+      type: 'pengumuman',
+      author: 'Ahmad Wijaya',
+      content: 'Kepada seluruh warga Cluster Kalita yang terhormat,\n\nDengan ini kami mengingatkan bahwa pembayaran iuran bulanan untuk bulan Januari 2025 akan berakhir pada tanggal 20 Januari 2025.\n\nBagi warga yang belum melakukan pembayaran, mohon segera melakukan pembayaran melalui:\n- Transfer ke rekening BCA: 1234567890 a.n. Ahmad Wijaya\n- Transfer ke rekening Mandiri: 0987654321 a.n. Ahmad Wijaya\n\nJangan lupa untuk mengirimkan bukti transfer ke WhatsApp bendahara di nomor 0814-3456-7890.\n\nTerima kasih atas perhatian dan kerjasamanya.'
     },
     {
       id: 2,
       title: 'Gotong Royong Bersih-Bersih Lingkungan',
-      date: '2025-01-10',
+      published_at: '2025-01-10',
       summary: 'Kegiatan gotong royong bersih-bersih lingkungan cluster akan dilaksanakan pada hari Minggu, 19 Januari 2025 pukul 07.00 WIB.',
-      type: 'berita'
+      type: 'berita',
+      author: 'Dedi Kurniawan',
+      content: 'Dalam rangka menjaga kebersihan dan keindahan lingkungan Cluster Kalita, akan diadakan kegiatan gotong royong bersih-bersih lingkungan.\n\nWaktu: Minggu, 19 Januari 2025\nJam: 07.00 - 10.00 WIB\nTitik kumpul: Taman tengah cluster\n\nKegiatan yang akan dilakukan:\n- Pembersihan saluran air\n- Penyapuan jalan\n- Pemangkasan tanaman\n- Pengecatan fasilitas umum\n\nMohon partisipasi seluruh warga dengan membawa peralatan:\n- Sapu\n- Cangkul\n- Gunting tanaman\n- Kantong sampah\n\nKonsumsi akan disediakan panitia. Mari bersama-sama menjaga lingkungan kita!'
     },
     {
       id: 3,
       title: 'Rapat Bulanan Pengurus RT',
-      date: '2025-01-08',
+      published_at: '2025-01-08',
       summary: 'Rapat koordinasi bulanan pengurus RT akan dilaksanakan pada Sabtu, 25 Januari 2025 di Balai Pertemuan Cluster Kalita.',
-      type: 'pengumuman'
+      type: 'pengumuman',
+      author: 'Siti Nurhaliza',
+      content: 'Kepada seluruh pengurus RT Cluster Kalita,\n\nDengan hormat,\nKami mengundang Bapak/Ibu untuk hadir dalam rapat koordinasi bulanan yang akan dilaksanakan pada:\n\nHari/Tanggal: Sabtu, 25 Januari 2025\nWaktu: 19.30 - 21.00 WIB\nTempat: Balai Pertemuan Cluster Kalita\n\nAgenda rapat:\n1. Laporan kegiatan bulan lalu\n2. Evaluasi program kerja\n3. Perencanaan kegiatan bulan depan\n4. Laporan keuangan\n5. Lain-lain\n\nMohon kehadiran tepat waktu. Terima kasih.'
     }
   ];
 
@@ -145,7 +151,7 @@ const Beranda: React.FC<BerandaProps> = ({ onNavigate }) => {
                     {news.type === 'berita' ? 'Berita' : 'Pengumuman'}
                   </span>
                   <span className="text-sm text-gray-500">
-                    {new Date(news.date).toLocaleDateString('id-ID')}
+                    {new Date(news.published_at).toLocaleDateString('id-ID')}
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
